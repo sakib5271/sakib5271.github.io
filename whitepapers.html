@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakib M. Khandaker — White Papers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #f8fafc;
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --border: rgba(15,23,42,0.08);
+      --border2: rgba(15,23,42,0.14);
+      --cyan: #2563eb;
+      --text: #1e293b;
+      --muted: #94a3b8;
+      --muted2: #64748b;
+      --heading: #0f172a;
+      --r2: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { min-height: 100vh; background: var(--bg2); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.75; }
+    nav { position: fixed; inset: 0 0 auto; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-wordmark { font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--heading); }
+    .nav-links { display: flex; gap: 1.25rem; list-style: none; align-items: center; }
+    .nav-links a { color: var(--muted2); text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 10rem 2.5rem 4rem; }
+    .section-ey { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; }
+    .sey-line { width: 22px; height: 1px; background: var(--cyan); }
+    .sey-text { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--cyan); letter-spacing: 0.12em; text-transform: uppercase; }
+    .section-title { font-family: 'EB Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--heading); line-height: 1.15; margin-bottom: 0.85rem; }
+    .section-sub { color: var(--muted2); font-size: 0.92rem; max-width: 680px; margin-bottom: 2.5rem; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .paper-list { display: flex; flex-direction: column; gap: 1rem; }
+    .paper-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.35rem; transition: border-color 0.2s; cursor: pointer; }
+    .paper-card:hover { border-color: var(--border2); }
+    .paper-card strong { display: block; margin-bottom: 0.55rem; font-size: 1rem; color: var(--heading); }
+    .paper-card p { color: var(--muted2); font-size: 0.88rem; line-height: 1.75; margin-bottom: 0.9rem; }
+    .paper-card a { color: var(--cyan); text-decoration: none; font-size: 0.86rem; font-weight: 600; }
+    .viewer-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; min-height: 720px; height: min(84vh, 780px); }
+    .viewer-box iframe { width: 100%; height: 100%; border: none; }
+    .message { padding: 1.25rem 1.35rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); color: var(--muted2); font-size: 0.9rem; line-height: 1.75; }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } .section-inner { padding: 8rem 1.5rem 2.5rem; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-wordmark">Sakib M. Khandaker</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="whitepapers.html" class="active">White Papers</a></li>
+      <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section>
+      <div class="section-inner">
+        <div class="section-ey"><div class="sey-line"></div><div class="sey-text">White Papers</div></div>
+        <h1 class="section-title">Published White Papers</h1>
+        <p class="section-sub">Browse portfolio PDFs below and view the selected paper in the panel.</p>
+        <div class="grid">
+          <div class="paper-list" id="paperList"><div class="message">Loading documents…</div></div>
+          <div class="viewer-box">
+            <iframe id="viewer" title="White paper viewer"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const manifestUrl = 'whitepapers/manifest.json';
+    const fallbackPdf = 'whitepapers/whitepaper.pdf';
+    const listContainer = document.getElementById('paperList');
+    const viewer = document.getElementById('viewer');
+
+    function setViewer(url) {
+      viewer.src = url;
+    }
+
+    function renderEmpty(message) {
+      listContainer.innerHTML = '<div class="message">' + message + '</div>';
+    }
+
+    function createCard(name, url) {
+      const card = document.createElement('div');
+      card.className = 'paper-card';
+      card.innerHTML = '<strong>' + name + '</strong>' +
+        '<p>View this white paper in the integrated preview pane.</p>' +
+        '<a href="' + url + '" target="_blank" rel="noreferrer">Open in new tab ↗</a>';
+      card.addEventListener('click', () => setViewer(url));
+      return card;
+    }
+
+    async function loadManifest() {
+      try {
+        const response = await fetch(manifestUrl);
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function tryPdf(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        return response.ok ? url : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function init() {
+      const manifest = await loadManifest();
+      let pdfs = [];
+
+      if (manifest && Array.isArray(manifest.pdfs)) {
+        pdfs = manifest.pdfs
+          .filter(file => typeof file === 'string' && file.toLowerCase().endsWith('.pdf'))
+          .map(file => ({ name: file.replace(/^.*[\\/]/, ''), url: file.startsWith('http') ? file : 'whitepapers/' + file }));
+      }
+
+      if (pdfs.length === 0) {
+        const fallback = await tryPdf(fallbackPdf);
+        if (fallback) {
+          pdfs = [{ name: 'whitepaper.pdf', url: fallback }];
+        }
+      }
+
+      if (pdfs.length === 0) {
+        renderEmpty('No white papers are currently available.');
+        return;
+      }
+
+      listContainer.innerHTML = '';
+      pdfs.forEach(item => listContainer.appendChild(createCard(item.name, item.url)));
+      setViewer(pdfs[0].url);
+    }
+
+    init();
+  </script>
+</body>
+</html>
