@@ -107,7 +107,8 @@
     .p-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .p-tag { background: var(--indigo-dim); border: 1px solid rgba(124,58,237,0.22); color: var(--indigo); padding: 0.22rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; }
     .p-chart { margin-top: 1.25rem; }
-    .mini-chart-wrap { height: 88px; position: relative; }
+    .mini-chart-wrap { width: min(100%, 140px); aspect-ratio: 1 / 1; max-width: 140px; position: relative; margin: 0 auto; }
+    .mini-chart-wrap canvas { width: 100% !important; height: 100% !important; }
 
     /* SECTION SHARED */
     section { padding: 6rem 2.5rem; position: relative; z-index: 1; }
@@ -180,7 +181,7 @@
     .scc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.4rem; margin-bottom: 1.1rem; }
     .scc-title { font-size: 0.85rem; font-weight: 600; color: var(--heading); margin-bottom: 0.15rem; }
     .scc-sub { font-size: 0.72rem; color: var(--muted); margin-bottom: 1.1rem; }
-    .radar-wrap { height: 220px; }
+    .radar-wrap { height: 240px; max-width: 300px; margin: 0 auto; padding: 0.5rem 0; }
     .legend-rows { display: flex; flex-direction: column; gap: 0.55rem; }
     .lr { display: flex; align-items: center; justify-content: space-between; }
     .lr-left { display: flex; align-items: center; gap: 0.55rem; }
@@ -237,7 +238,7 @@
     .tl-dot { position: absolute; left: -4px; top: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); border: 2px solid var(--bg); box-shadow: 0 0 0 3px rgba(37,99,235,0.18); }
     .tl-period { font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; color: var(--cyan); margin-bottom: 0.35rem; }
     .tl-role { font-size: 0.98rem; font-weight: 600; color: var(--heading); margin-bottom: 0.15rem; }
-    .tl-org { font-size: 0.8rem; color: var(--muted2); margin-bottom: 0.65rem; }
+    .tl-org { font-size: 0.85rem; font-weight: 600; color: var(--heading); margin-bottom: 0.65rem; }
     .tl-desc { font-size: 0.82rem; color: var(--muted2); line-height: 1.75; }
     .tl-tags { display: flex; flex-wrap: wrap; gap: 0.38rem; margin-top: 0.65rem; }
     .tl-tag { font-size: 0.68rem; background: var(--bg3); border: 1px solid var(--border); color: var(--muted2); padding: 0.14rem 0.52rem; border-radius: 4px; }
@@ -262,12 +263,13 @@
     .pb-item:last-child { border: none; padding-bottom: 0; }
     .pb-school { font-weight: 500; color: var(--text); }
     .pb-type { font-size: 0.66rem; font-family: 'JetBrains Mono', monospace; color: var(--indigo); background: var(--indigo-dim); border: 1px solid rgba(124,58,237,0.22); padding: 0.14rem 0.48rem; border-radius: 4px; }
-    .vision-charts { display: grid; gap: 1.4rem; justify-items: center; }
-    .vc { width: min(100%, 520px); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.4rem; margin-bottom: 1.1rem; }
+    .vision-charts { display: grid; gap: 1.4rem; justify-items: center; justify-content: center; width: 100%; }
+    .vc { width: min(100%, 520px); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.4rem; margin: 0 auto 1.1rem; }
     .vc-title { font-size: 0.84rem; font-weight: 600; color: var(--heading); margin-bottom: 0.15rem; }
     .vc-sub { font-size: 0.72rem; color: var(--muted); margin-bottom: 1.1rem; }
-    .vc-wrap { height: 185px; }
-    .vision-charts .vc:last-child .vc-wrap { height: 250px; }
+    .vc-wrap { height: 185px; display: flex; align-items: center; justify-content: center; }
+    .vision-charts .vc:last-child .vc-wrap { height: 340px; }
+    .vc-wrap canvas { width: 100% !important; height: 100% !important; }
 
     /* CONTACT */
     .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
@@ -368,7 +370,7 @@
       <div class="hero-creds">
         <div class="cred-chip"><div class="cred-dot d-cyan"></div>3.93 / 4.0 GPA · B.Sc EEE, IUT</div>
         <div class="cred-chip"><div class="cred-dot d-indigo"></div>7+ Years · Telecom, SaaS, Marketplace</div>
-        <div class="cred-chip"><div class="cred-dot d-gold"></div>Champion · Axiata AI Maturity Index</div>
+        <div class="cred-chip"><div class="cred-dot d-gold"></div>Built analytics products used by enterprise decision teams</div>
       </div>
       <div class="hero-actions">
         <a href="#projects" class="btn-primary">Explore My Work →</a>
@@ -1035,13 +1037,6 @@
             </div>
           </div>
           <div class="aw-item">
-            <div class="aw-icon">📊</div>
-            <div>
-              <div class="aw-title">Introduction to Business Intelligence</div>
-              <div class="aw-meta">Corporate Finance Institute (CFI)</div>
-            </div>
-          </div>
-          <div class="aw-item">
             <div class="aw-icon">🧠</div>
             <div>
               <div class="aw-title">Seven Habits of Highly Effective People</div>
@@ -1224,11 +1219,14 @@
     type: 'radar',
     data: {
       labels: ['Analytics','Strategy','ML/AI','BI Platforms','Product','Comm.'],
-      datasets: [{ data: [92,90,80,95,88,85],
+      datasets: [{ data: [92,90,84,95,88,85],
         backgroundColor:'rgba(37,99,235,0.1)', borderColor: C.cyan, borderWidth:2,
         pointBackgroundColor: C.cyan, pointRadius:3 }]
     },
-    options: { plugins:{ legend:{display:false} },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
       scales:{ r:{ min:60, max:100, ticks:{display:false},
         grid:{color:'rgba(0,0,0,0.08)'}, angleLines:{color:'rgba(0,0,0,0.08)'},
         pointLabels:{font:{size:8.5}, color:'#475569'} } } }
@@ -1309,10 +1307,12 @@
           backgroundColor:'rgba(124,58,237,0.07)', borderColor:'rgba(124,58,237,0.4)', borderWidth:1.5, borderDash:[4,4], pointRadius:0 }
       ]
     },
-    options: { plugins:{ legend:{position:'top', labels:{font:{size:10}, boxWidth:8}} },
+    options: { responsive:true, maintainAspectRatio:false, aspectRatio:1,
+      plugins:{ legend:{position:'top', labels:{font:{size:10}, boxWidth:8}} },
+      layout:{padding:18},
       scales:{ r:{ min:60, max:100, ticks:{display:false},
         grid:{color:'rgba(0,0,0,0.08)'}, angleLines:{color:'rgba(0,0,0,0.08)'},
-        pointLabels:{font:{size:9.5}, color:'#475569'} } } }
+        pointLabels:{font:{size:9.5}, color:'#475569', padding:14} } } }
   });
 
   /* Vision timeline bar */
@@ -1342,25 +1342,34 @@
       labels:['Customer Analytics','Forecasting','AI Adoption','Price Elasticity','BI Architecture','Market Analytics'],
       datasets:[{
         data:[28,20,20,14,10,8],
-        backgroundColor:['#2563eb','#1e40af','#7c3aed','#0891b2','#d97706','#64748b'],
+        backgroundColor:['#2563eb','#0f766e','#7c3aed','#f59e0b','#0f172a','#475569'],
         borderColor:'#ffffff',
         borderWidth:2,
-        hoverOffset:8
+        hoverOffset:10
       }]
     },
     options:{
+      responsive:true,
+      maintainAspectRatio:false,
       cutout:'65%',
+      layout:{padding:{top:10,right:10,bottom:10,left:10}},
       plugins:{
         legend:{
           position:'bottom',
           align:'center',
           labels:{
-            font:{size:10.5, weight:'500'},
-            padding:10,
-            boxWidth:10,
-            color:'#475569',
-            usePointStyle:true
+            font:{size:12, weight:'600'},
+            padding:14,
+            boxWidth:12,
+            color:'#334155',
+            usePointStyle:true,
+            pointStyle:'circle'
           }
+        },
+        tooltip:{
+          bodyFont:{size:12},
+          titleFont:{size:13, weight:'600'},
+          padding:12
         }
       }
     }
